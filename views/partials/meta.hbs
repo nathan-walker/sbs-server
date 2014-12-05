@@ -1,0 +1,14 @@
+<div class="entry-meta">
+	<span class="authorlink">
+		{{ authorLink }}
+	</span><br />
+	<span class="permalink">
+		<a href="{{ pageURL }}">{{{ makeTimeTag "published" }}}</a>
+	</span>
+	{{ locationLink }}<br />
+	{{#if tags}}
+	<span class="tags">
+		Tagged: {{ tagList }}
+	</span>
+	{{/if}}
+</div>

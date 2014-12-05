@@ -1,0 +1,7 @@
+{{> header}}
+<h1 class="entry-title page-title">{{ displayName }}</h1>
+<div class="entry-content author-page">
+	<img class="author-img" src="{{ imageURL }}" alt="Photo of {{ displayName }}" />
+	{{#marked}}{{{ description }}}{{/marked}}
+</div>
+{{> footer}}

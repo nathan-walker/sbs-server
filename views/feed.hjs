@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>{{ settings.site-title }}</title>
+		<link>{{ settings.base-url }}</link>
+		<atom:link href="{{ settings.base-url }}/rss" rel="self" type="application/rss+xml" />
+		<description>{{ settings.description }}</description>
+		<language>{{ settings.language }}</language>
+		<pubDate>{{ publishedDate }}</pubDate>
+		<lastBuildDate>{{ publishedDate }}</lastBuildDate>
+		<docs>http://blogs.law.harvard.edu/tech/rss</docs>
+		<generator>Simple Blog Server</generator>
+		<managingEditor>{{ settings.editorEmail }} ({{ settings.editorName }})</managingEditor>
+		<webMaster>{{ settings.webmasterEmail }} ({{ settings.webmasterName }})</webMaster>
+		{{#posts}}
+		{{#if isLink}}
+		<item>
+			<title>&rarr; {{ title }}</title>
+			<link>{{ linksTo }}</link>
+			<description><![CDATA[{{ feedInterior }}<p><a href="{{ pageURL }}">Permalink</a></p>]]></description>
+			<pubDate>{{ published-rfc822 }}</pubDate>
+			<guid>{{ pageURL }}</guid>
+		</item>
+		{{else}}
+		<item>
+			<title>{{ title }}</title>
+			<link>{{ pageURL }}</link>
+			<description><![CDATA[{{ feedContent }}]]></description>
+			<pubDate>{{ published-rfc822 }}</pubDate>
+			<guid>{{ pageURL }}</guid>
+		</item>
+		{{/if}}
+		{{/posts}}	
+	</channel>
+</rss>

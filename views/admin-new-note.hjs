@@ -1,0 +1,27 @@
+{{> admin_header}}
+<div class="main-container">
+	<div class="">
+	<h1>
+		New Note
+	</h1>
+	<form class="pure-form pure-form-stacked post-editor" action="/admin/new" method="post">
+		<fieldset>
+			<textarea class="content-box" name="content" rows="15" placeholder="Lorem ipsum..."></textarea>
+			<input id="tags" name="tags" type="text" placeholder="Tags (space separated)">
+			<input type="hidden" readonly value="Note" name="category">
+			<label for="publish-time">Publish:</label> <select id="publish-time">
+				<option>
+					Now
+				</option>
+				<option>
+					Later
+				</option>
+			</select>
+			<input type="datetime" placeholder="Publish date" name="publishDate">
+			<button type="submit" class="pure-button button-error">Publish</button>
+		</fieldset>
+	</form>
+</div>
+</div>
+
+{{> admin_footer}}

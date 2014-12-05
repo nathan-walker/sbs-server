@@ -1,0 +1,10 @@
+{{> header}}
+<h1 class="entry-title page-title">{{ title }}</h1>
+<div class="post-list">
+{{#posts}}
+<article>
+	{{ postInterior }}
+</article>
+{{/posts}}
+</div>
+{{> footer}}

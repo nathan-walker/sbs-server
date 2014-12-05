@@ -1,0 +1,56 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="{{ settings.baseURL }}/js/dropzone.js"></script>
+<script>
+var fillCurrentLocation = function() {
+	if ("geolocation" in navigator) {
+		navigator.geolocation.getCurrentPosition(function(position) {
+			$('#latitude').val(position.coords.latitude);
+			$('#longitude').val(position.coords.longitude);
+			$('#addLocationButton').prop('disabled', true);
+			$('#addLocationButton').text('Added');
+			$.get("{{ settings.baseURL }}/admin/nearby/" + position.coords.latitude + '/' + position.coords.longitude,
+				function(data) {
+					$('#possibleLocations ol').html("");
+					$('#possibleLocations').css('display', 'initial');
+					data.venues.forEach(function(element, index, array) {
+						$('#possibleLocations ol').append(
+							$('<li />', {
+								html: $('<a />', {
+									href: '#',
+									text: element.name
+								})
+							})
+						);
+					});
+					$('#possibleLocations ol li').click(function() {
+						var name = $( this ).text();
+						$('#locationName').val(name);
+						$('#specificLocation').attr('checked', true);
+					});
+				}
+			);
+		});
+	} else {
+		$('#addLocationButton').prop('disabled', true);
+		$('#addLocationButton').text('Location not available');
+	}
+};
+
+$('#addLocationButton').click(function() {
+	if (!$(this).prop('disabled')) {
+		fillCurrentLocation();
+	}
+});
+
+Dropzone.options.photo = {
+	maxFiles: 1,
+	init: function() {
+		this.on('success', function(file, res) {
+			$('#photoURL').val(res);
+			console.log(res);
+		});
+	}
+};
+</script>
+</body>
+</html>

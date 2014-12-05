@@ -1,0 +1,75 @@
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+    /* Set your content font stack here: */
+    font-family: "Helvetica Neue", sans-serif;
+}
+</style>
+
+.main-nav {
+	border-bottom: 1px solid grey !important;
+}
+
+.main-container {
+	padding: 10px;
+	width: 750px;
+	margin: 0 auto;
+}
+
+
+
+
+
+#title {
+	width: 100%;
+	font-size: 150%;
+}
+
+.content-box {
+	width: 100%;
+}
+
+.button-success,
+        .button-error,
+        .button-warning,
+        .button-secondary {
+            color: white;
+        }
+
+        .button-success {
+            background: rgb(28, 184, 65); /* this is a green */
+        }
+
+        .button-error {
+            background: rgb(202, 60, 60); /* this is a maroon */
+        }
+
+        .button-warning {
+            background: rgb(223, 117, 20); /* this is an orange */
+        }
+
+        .button-secondary {
+            background: rgb(66, 184, 221); /* this is a light blue */
+        }
+#tags, #slug {
+	width: 100%;
+}
+
+#link {
+	width: 100%;
+}
+
+.admin-table {
+	width: 100%;
+}
+
+.settings-table {
+	width: 100%;
+}
+.settings-table th {
+	width: 200px;
+	padding-right: 40px;
+	text-align: right;
+}
+.settings-table input[type=text] {
+	width: 100%;
+}

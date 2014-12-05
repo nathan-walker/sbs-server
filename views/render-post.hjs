@@ -1,0 +1,10 @@
+<h1 class="entry-title"><a href="{{{ pageURL }}}">{{ title }}</a></h1>
+<div class="entry-content">
+	{{#if truncate}}
+	{{#markedTruncated}}{{{ body }}}{{/markedTruncated}}
+	<p><a class="read-more-link" href="{{{ pageURL }}}">Continue reading &rarr;</a></p>
+	{{else}}
+	{{#marked}}{{{ body }}}{{/marked}}
+	{{/if}}
+</div>
+{{> meta}}

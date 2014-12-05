@@ -1,0 +1,33 @@
+{{> admin_header}}
+<div class="main-container">
+		<div class="">
+			<h1>New Photo</h1>
+			<form action="/admin/uploadfile"
+			      class="dropzone"
+			      id="photo"></form>
+			<form class="pure-form pure-form-stacked post-editor" action="/admin/new" method="post">
+    			<fieldset>
+					<input id="title" type="text" placeholder="Title" name="title">
+					<input id="link" type="text" placeholder="Original Source" name="sourceLink">
+					<textarea class="content-box" rows="4" placeholder="Lorem ipsum..." name="content"></textarea>
+					<input id="tags" type="text" placeholder="Tags (space separated)" name="tags">
+					
+					<label for="publish-time">Publish:</label>
+					<input type="hidden" readonly value="Photo" name="category">
+					<input type="datetime" placeholder="Publish date" name="publishDate">
+					<button class="pure-button button-secondary" id="addLocationButton" type="button">Add location coordinates</button>
+					<input type="text" placeholder="Location name" name="locationName">
+					<label for="specificLocation" class="pure-checkbox">
+						<input name="specificLocation" id="specificLocation" type="checkbox"> Specific
+					</label>
+					<input type="hidden" name="latitude" id="latitude">
+					<input type="hidden" name="longitude" id="longitude">
+					<input type="hidden" name="photoURL" id="photoURL">
+
+					<button type="submit" class="pure-button button-error">Publish</button>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+
+{{> admin_footer}}

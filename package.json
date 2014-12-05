@@ -1,0 +1,35 @@
+{
+  "name": "sbs-server",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "express": "~4.2.0",
+    "static-favicon": "~1.0.0",
+    "morgan": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "body-parser": "~1.0.0",
+    "debug": "~0.7.4",
+    "hjs": "~0.0.6",
+    "mongoose": "~3.8.19",
+    "nconf": "~0.6.9",
+    "hogan-express": "~0.5.2",
+    "bcrypt": "~0.8.0",
+    "passport": "~0.2.1",
+    "express-session": "~1.9.1",
+    "passport-local": "~1.0.0",
+    "moment": "~2.8.3",
+    "mustache-express": "~1.2.0",
+    "hbs": "~2.7.0",
+    "async": "~0.9.0",
+    "marked": "~0.3.2",
+    "slug": "~0.8.0",
+    "twitter": "~0.2.13",
+    "multimarkdown": "0.0.15",
+    "connect-busboy": "0.0.2",
+    "gm": "~1.17.0",
+    "node-foursquare": "~0.2.1"
+  }
+}

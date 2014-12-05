@@ -1,0 +1,16 @@
+{{> admin_header}}
+	<div class="main-container pure-g">
+		<div class="pure-u-1">
+			<h1>Hi, {{ user.firstName }}!</h1>
+			<h2>New Posts:</h2>
+			<ul>
+				<li><a href="admin/new/post">New Post</a></li>
+				<li><a href="admin/new/status">New Status</a></li>
+				<li><a href="admin/new/link">New Link</a></li>
+				<li><a href="admin/new/page">New Page</a></li>
+				<li><a href="admin/new/note">New Note</a></li>
+				<li><a href="admin/new/photo">New Photo</a></li>
+			</ul>
+		</div>
+	</div>
+{{> admin_footer}}

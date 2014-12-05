@@ -1,0 +1,9 @@
+<div class="header-media">
+	<a href="{{ pageURL }}"><img class="media-embed" src="{{{ imageURL }}}" /></a>
+</div>
+{{#if title}}<a href="{{ pageURL }}"><h1 class="entry-title media-title">{{ title }}</h1></a>{{/if}}
+<div class="entry-content media-caption">
+	{{#marked}}{{{ body }}}{{/marked}}
+</div>
+
+{{> meta}}

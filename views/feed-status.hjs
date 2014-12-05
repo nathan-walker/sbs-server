@@ -1,0 +1,2 @@
+{{#if body}}{{#marked}}{{{ body }}}{{/marked}}{{/if}}
+

@@ -1,0 +1,4 @@
+<h1 class="entry-title page-title">{{ title }}</h1>
+<div class="entry-content">
+	{{#marked}}{{{ body }}}{{/marked}}
+</div>

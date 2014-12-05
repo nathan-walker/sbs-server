@@ -1,0 +1,4 @@
+<div class="entry-content status-update">
+	{{#marked}}{{{ body }}}{{/marked}}
+</div>
+{{> meta}}

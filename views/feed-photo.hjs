@@ -1,0 +1,2 @@
+<a href="{{ pageURL }}"><img class="media-embed" src="{{{ imageURL }}}" /></a>
+{{#marked}}{{{ body }}}{{/marked}}

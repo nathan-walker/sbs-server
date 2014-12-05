@@ -1,0 +1,5 @@
+<h1 class="entry-title"><a href="{{{ linksTo }}}" target="_blank">&rarr; {{ title }}</a></h1>
+<div class="entry-content">
+	{{#if body}}{{#marked}}{{{ body }}}{{/marked}}{{/if}}
+</div>
+{{> meta}}
