@@ -8,9 +8,13 @@ var LocalStrategy = require('passport-local').Strategy;
 var Post = mongoose.model('Post');
 var moment = require('moment');
 var slug = require('slug');
+
+// File setup for uploads
 var fs = require('fs');
 var path = require('path');
 var gm = require('gm');
+
+// Foursquare setup for location lookup
 var foursquareConfig = {
 	'secrets': {
 		'clientId': nconf.get('foursquare:client-id'),
@@ -18,9 +22,9 @@ var foursquareConfig = {
 		'redirectUrl': "http://nwalker.org"
 	}	
 };
-console.log(foursquareConfig);
 var foursquare = require('node-foursquare')(foursquareConfig);
 
+// Creates a strategy for passport
 passport.use(new LocalStrategy(
 	function(username, password, done) {
 		mongoose.model('User').findOne({ _id: username}, function(err, user) {
@@ -49,6 +53,7 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
+// Enables the use of sessions
 router.use(session({ 
 	secret: nconf.get('cookieSecret'),
 	resave: false,
@@ -56,6 +61,8 @@ router.use(session({
 }));
 router.use(passport.initialize());
 router.use(passport.session());
+
+// If the user is not logged in, redirect to admin login page
 router.use(function(req, res, next) {
 	if (req.url !== '/login') {
 		if (!req.user) {
@@ -66,13 +73,15 @@ router.use(function(req, res, next) {
 	} else {
 		next();
 	}
-})
+});
 
+// Establishes login form action
 router.post('/login', passport.authenticate('local', {
 	successRedirect: '/',
 	failureRedirect: '/login'
 }));
 
+// Login page, redirects to home if already logged in
 router.get('/login', function(req, res) {
 	if (req.user) {
 		res.redirect('/');
@@ -81,22 +90,23 @@ router.get('/login', function(req, res) {
 	}
 });
 
-/* GET home page. */
+// Index page
 router.get('/', function(req, res) {
 	res.render('admin-index', { user: req.user });
 });
 
-/* New posts */
-
+// Form action for new posts
 router.post('/new', function(req, res){
 	var info = req.body;
-	console.log(info);
+	
+	// Converts coordinates from strings to numbers 
 	if (info.latitude) {
 		info.latitude = Number(info.latitude);
 	}
 	if (info.longitude) {
 		info.longitude = Number(info.longitude);
 	}
+	
 	var newPost = new Post({
 		title: info.title,
 		body: info.content,
@@ -115,10 +125,12 @@ router.post('/new', function(req, res){
 		imageURL: info.photoURL
 	});
 	
+	// Make date now if not specified
 	if (!info.publishDate) {
 		newPost.published = Date.now();
 	}
 	
+	// Auto-generates a slug if one is not given
 	if (!info.slug) {
 		if (info.title) {
 			newPost.slug = slug(info.title).toLowerCase();
@@ -127,10 +139,12 @@ router.post('/new', function(req, res){
 		}
 	}
 	
+	// Auto-generates a title if one is not specified
 	if (!info.title) {
 		newPost.title = newPost.type + ' from ' + moment(newPost.published).format(nconf.get('date-format'));
 	}
 	
+	// Adds tags to the post
 	newPost.addTags(info.tags, function() {
 		newPost.post(function(err, post) {
 			if (err) {
@@ -140,21 +154,22 @@ router.post('/new', function(req, res){
 				res.redirect('/');
 			}
 		});
-	});
-	
+	});	
 });
 
+// File upload action
 router.post('/uploadfile', function(req, res) {
 	var fileStream;
+	// Pipes in the upload
 	req.pipe(req.busboy);
 	req.busboy.on('file', function (fieldname, file, filename) {
 		var webAddress = '/images/uploads/uploaded-' + moment().unix() + '-' + filename;
 		var fileAddress = '/public' + webAddress;
 		var newFilePath = path.resolve('./' + fileAddress);
-		console.log("Uploading" + filename);
 		fileStream = fs.createWriteStream(newFilePath);
 		file.pipe(fileStream);
 		fileStream.on('close', function() {
+			// Auto-rotates the image and sizes it properly
 			gm(newFilePath).autoOrient().resize(768).write(newFilePath, function(err) {
 				res.send(nconf.get('base-url') + webAddress);
 			});
@@ -162,12 +177,14 @@ router.post('/uploadfile', function(req, res) {
 	});
 });
 
+// Finds nearby venues at a place
 router.get('/nearby/:lat/:lng', function(req, res) {
 	foursquare.Venues.search(req.params.lat, req.params.lng, null, { limit: 5 }, null, function(err, results) {
 		res.send(results);
 	});
 });
 
+/** Create forms **/
 router.get('/new/post', function(req, res) {
 	res.render('admin-new-post');
 });

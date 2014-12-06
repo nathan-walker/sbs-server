@@ -4,36 +4,45 @@ var nconf = require('nconf');
 var mongoose = require('mongoose');
 var moment = require('moment');
 
-/* GET home page. */
+// GET home page
 router.get('/', function(req, res) {
-	mongoose.model('Post').find({ type: { $ne: 'Page' }}).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
-		posts.forEach(function(element, index, array) {
-			element.truncate = true;
-		});
-		res.render('index', { 
-			title: "Home", 
-			posts: posts
-		});
+	// Get all posts that are not pages and are published
+	mongoose.model('Post').find({ 
+			type: { $ne: 'Page' },
+			published: { $lt: Date.now() }
+		}).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
+			// Adds the truncate flag to all posts
+			posts.forEach(function(element, index, array) {
+				element.truncate = true;
+			});
+			res.render('index', { 
+				title: "Home", 
+				posts: posts
+			});
 	});
 });
 
+// GET rss feed
 router.get('/rss', function(req, res) {
-	mongoose.model('Post').find({ type: { $ne: 'Page' }}).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
-		posts.forEach(function(element, index, array) {
-			element.truncate = true;
-		});
-		res.render('feed', {
-			posts: posts,
-			publishedDate: moment(posts[0].published).format('ddd, DD MMM YYYY HH:mm:ss ZZ')
-		});
+	// Get all posts that are not pages and are published
+	mongoose.model('Post').find({
+			type: { $ne: 'Page' },
+			published: { $lt: Date.now() }
+		}).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
+			res.render('feed', {
+				posts: posts,
+				publishedDate: moment(posts[0].published).format('ddd, DD MMM YYYY HH:mm:ss ZZ')
+			});
 	});
 });
 
+// GET post page
 router.get('/:year/:month/:slug', function(req, res) {
+	// find post by slug that is published
 	mongoose.model('Post').find(
 		{ 
 			slug: req.params.slug,
-			published: { $lt: Date.now() },
+			published: { $lt: Date.now() }
 		}
 	).populate('tags').populate('author').limit(1).exec(function(err, posts) {
 		if (posts[0].type == 'Page') {
@@ -44,6 +53,7 @@ router.get('/:year/:month/:slug', function(req, res) {
 	});
 });
 
+// GET author page
 router.get('/author/:id', function(req, res) {
 	mongoose.model('User').find({
 		_id: req.params.id
@@ -55,6 +65,7 @@ router.get('/author/:id', function(req, res) {
 	});
 });
 
+// GET tag list page
 router.get('/tagged/:tag', function(req, res) {
 	mongoose.model('Tag').find(
 		{
@@ -80,7 +91,7 @@ router.get('/tagged/:tag', function(req, res) {
 	});
 });
 
-
+// Get special pages
 router.get('/:slug', function(req, res, next) {
 	mongoose.model('Post').find(
 		{
@@ -92,6 +103,7 @@ router.get('/:slug', function(req, res, next) {
 			res.status(404);
 			next();
 		} else {
+			// See if a page is designed as a redirect
 			if (posts[0].linksTo) {
 				res.redirect(301, posts[0].linksTo)
 			} else {

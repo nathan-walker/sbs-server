@@ -16,15 +16,21 @@ nconf.file({ file: 'config.json' });
 var db = require('./sources/db.js');
 require('./models.js');
 
-// view engine setup
+/** view engine setup **/
 
+// Loads in all of the partial templates
 hbs.registerPartials(__dirname + '/views/partials');
+
+// Makes this function easily available
 var escapeString = hbs.handlebars.Utils.escapeExpression;
 
+// A function that returns an HTML time tag
 hbs.registerHelper('makeTimeTag', function(location, options) {
 	var date = moment(this[location]);
 	return '<time class="entry-date" datetime="' + date.toISOString() + '">' + date.format(nconf.get('date-format')) + '</time>';
 });
+
+// A function that lists tags from a post
 hbs.registerHelper('tagList', function(options) {
 	var listArray = [];
 	this.tags.forEach(function(tag, index, array) {
@@ -35,18 +41,28 @@ hbs.registerHelper('tagList', function(options) {
 	});
 	return new hbs.handlebars.SafeString(listArray.join(', '));
 });
+
+// A function that returns the canonical page URL
 hbs.registerHelper('pageURL', function() {
 	var published = moment(this.published);
 	return nconf.get('base-url') + '/' + published.format('YYYY') + '/' + published.format('MM') + '/' + this.slug;
 });
+
+// A link to an author's page
 hbs.registerHelper('authorLink', function() {
 	var author = this.author;
 	var string = '<a href="' + nconf.get('base-url') + '/author/' + escapeString(author._id) + '">by ' + escapeString(author.displayName) + '</a>';
 	return new hbs.handlebars.SafeString(string);
 });
+
+// An RFC822 publication date for RSS feeds
 hbs.registerHelper('published-rfc822', function() {
 	return new hbs.handlebars.SafeString(moment(this.published).format('ddd, DD MMM YYYY HH:mm:ss ZZ'));
 });
+
+// Processes text for MultiMarkdown
+// Called 'marked' because that used to be the engine
+// Now using node-multimarkdown
 hbs.registerHelper('marked', function(options) {
 	var text;
 	if (options.fn(this)) {
@@ -56,14 +72,20 @@ hbs.registerHelper('marked', function(options) {
 	}
 	return new hbs.handlebars.SafeString(text);
 });
+
+// Same as above, but truncated
 hbs.registerHelper('markedTruncated', function(options) {
 	var text = multimarkdown.convert(options.fn(this));
 	var truncated = text.substr(0, text.indexOf('</p>', text.indexOf('</p>')+4)+4);
 	return new hbs.handlebars.SafeString(truncated);
 });
+
+// Creates a link for a location
 hbs.registerHelper('locationLink', function() {
 	if (this.location.name) {
 		var innerString;
+		
+		// Uses 'at' for specific locations and 'near' for non-specific locations
 		if (this.location.specific) {
 			innerString = 'at ' + this.location.name;
 		} else {
@@ -71,41 +93,57 @@ hbs.registerHelper('locationLink', function() {
 		}
 		
 		var link;
+		// Generates a link if coordinates are available
 		if (this.location.latitude && this.location.longitude) {
+			// Default level is 17
 			var level = 17;
 			if (!this.location.specific) {
+				// Makes coordinates only to 2 decimals if non-specific
 				this.location.latitude = this.location.latitude.toFixed(2);
 				this.location.longitude = this.location.longitude.toFixed(2);
+				// Moves level out if non-specific location
 				level = 15;
 			}
 			link = 'http://bing.com/maps/default.aspx?cp=' + this.location.latitude + '~' + this.location.longitude + '&lvl=' + level;
 		}
 		var stringBeginning = '<span class="locationlink">';
 		var finalString;
+		
+		// adds a link tag if link is available
 		if (link) {
 			finalString = stringBeginning + '<a href="' + link + '" target="_blank">' + innerString + '</a></span>';
 		} else {
 			finalString = stringBeginning + innerString + '</span>';
 		}
+		
 		return new hbs.handlebars.SafeString(finalString);
 	} else {
+		// Returns a blank string if name is empty
 		return '';
 	}
 });
+
+// Checks if a post is a link, used with Handlebars {{#if}} tag
 hbs.registerHelper('isLink', function() {
 	return this.type == "Link";
 });
 
+// Brings in the special interiors for web site rendering
 var fs = require('fs');
+// Allows hjs files to be require()'d
 require.extensions['.hjs'] = function (module, filename) {
     module.exports = fs.readFileSync(filename, 'utf8');
 };
+
+// Makes render functions for each of these templates
 var postRender = handlebars.compile(require('./views/render-post.hjs'));
 var linkRender = handlebars.compile(require('./views/render-link.hjs'));
 var statusRender = handlebars.compile(require('./views/render-status.hjs'));
 var noteRender = handlebars.compile(require('./views/render-note.hjs'));
 var pageRender = handlebars.compile(require('./views/render-page.hjs'));
 var photoRender = handlebars.compile(require('./views/render-photo.hjs'));
+
+// Generic helper function for all interiors
 hbs.registerHelper('postInterior', function() {
 	var result;
 	switch (this.type) {
@@ -134,11 +172,14 @@ hbs.registerHelper('postInterior', function() {
 	return new handlebars.SafeString(result);
 });
 
+// Special interiors for RSS feeds
 var postFeedRender = handlebars.compile(require('./views/feed-post.hjs'));
 var linkFeedRender = handlebars.compile(require('./views/feed-link.hjs'));
 var statusFeedRender = handlebars.compile(require('./views/feed-status.hjs'));
 var noteFeedRender = handlebars.compile(require('./views/feed-note.hjs'));
 var photoFeedRender = handlebars.compile(require('./views/feed-photo.hjs'));
+
+// Generic helper functions for all feed interiors
 hbs.registerHelper('feedContent', function() {
 	var result;
 	switch (this.type) {
@@ -164,9 +205,11 @@ hbs.registerHelper('feedContent', function() {
 	return new handlebars.SafeString(result);
 });
 
+// References the route files
 var adminRoutes = require('./routes/admin');
 var routes = require('./routes/index');
 
+// Function to create an app object
 var createApp = function(routes) {
 	var app = express();
 	app.set('views', path.join(__dirname, 'views'));
@@ -229,6 +272,7 @@ var createApp = function(routes) {
 	return app;
 }
 
+// Creates objects for main app and admin interface
 var app = createApp(routes);
 var admin = createApp(adminRoutes);
 

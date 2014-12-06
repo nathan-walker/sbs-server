@@ -99,6 +99,7 @@ postSchema.methods.addTags = function(tagString, callback) {
 	}
 };
 
+// deprecated, currently unused to my knowledge
 postSchema.methods.addShadowTag = function(name, callback) {
 	var post = this;
 	Tag.findOne({ name: name }, function(err, tag) {
