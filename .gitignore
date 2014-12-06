@@ -34,6 +34,7 @@ config.json
 *.csr
 *.crt
 *.srl
+certs
 
 # Uploads
 public/images/uploads
