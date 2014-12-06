@@ -76,8 +76,8 @@ postSchema.methods.addTags = function(tagString, callback) {
 	var post = this;
 	console.log(tagString);
 	if (tagString) {
-		console.log(tags);
 		var tags = tagString.split(' ');
+		console.log(tags);
 		async.map(tags, function(item, cb) {
 			item = item.toLowerCase();
 			Tag.findOne({ name: item }, function(err, tag) {
