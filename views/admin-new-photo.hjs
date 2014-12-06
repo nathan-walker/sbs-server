@@ -2,7 +2,7 @@
 <div class="main-container">
 		<div class="">
 			<h1>New Photo</h1>
-			<form action="/admin/uploadfile"
+			<form action="/uploadfile"
 			      class="dropzone"
 			      id="photo"></form>
 			<form class="pure-form pure-form-stacked post-editor" action="/new" method="post">
