@@ -49,7 +49,7 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-router.use(session({ secret: "keyboard cat" }));
+router.use(session({ secret: nconf.get('cookieSecret') }));
 router.use(passport.initialize());
 router.use(passport.session());
 router.use(function(req, res, next) {
