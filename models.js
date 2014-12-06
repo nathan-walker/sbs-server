@@ -85,6 +85,7 @@ postSchema.methods.addTags = function(tagString, callback) {
 				if (tag !== undefined || tag !== null) {
 					cb(err, tag);
 				} else {
+					console.log("here");
 					tag = new Tag({ name: item });
 					tag.save(function(err, tag) {
 						console.log('error:' + err);
