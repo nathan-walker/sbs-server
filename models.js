@@ -82,7 +82,7 @@ postSchema.methods.addTags = function(tagString, callback) {
 			item = item.toLowerCase();
 			Tag.findOne({ name: item }, function(err, tag) {
 				console.log(tag);
-				if (tag !== undefined) {
+				if (tag !== undefined || tag !== null) {
 					cb(err, tag);
 				} else {
 					tag = new Tag({ name: item });
