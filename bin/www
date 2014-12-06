@@ -11,10 +11,10 @@ var admin = apps.admin;
 app.set('port', process.env.PORT || 3000);
 
 var adminServer = https.createServer({
-	key: fs.readFileSync('server.key'),
+	key: fs.readFileSync('certs/server.key'),
 	passphrase: nconf.get('sslKey'),
-	cert: fs.readFileSync('server.crt'),
-	ca: fs.readFileSync('ca.crt'),
+	cert: fs.readFileSync('certs/server.crt'),
+	ca: fs.readFileSync('certs/ca.crt'),
 	requestCert: true,
 	rejectUnauthorized: true
 }, admin);
