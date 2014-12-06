@@ -88,6 +88,7 @@ postSchema.methods.addTags = function(tagString, callback) {
 					tag = new Tag({ name: item });
 					tag.save(function(err, tag) {
 						console.log('error:' + err);
+						console.log('tag:' + tag);
 						cb(err, tag);
 					});
 				}
