@@ -93,6 +93,7 @@ postSchema.methods.addTags = function(tagString, callback) {
 				}
 			});
 		}, function(err, results) {
+			console.log(results);
 			results.forEach(function(element, index, array) {
 				post.tags.push(element._id);
 			});
