@@ -49,7 +49,11 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-router.use(session({ secret: nconf.get('cookieSecret') }));
+router.use(session({ 
+	secret: nconf.get('cookieSecret'),
+	resave: false,
+	saveUninitialized: false 
+}));
 router.use(passport.initialize());
 router.use(passport.session());
 router.use(function(req, res, next) {
