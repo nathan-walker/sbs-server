@@ -73,13 +73,15 @@ router.get('/tagged/:tag', function(req, res) {
 		}
 	).exec(function(err, tags) {
 		if (tags) {
-			console.log(tags[0]);
 			mongoose.model('Post').find(
 				{ 
 					tags: tags[0]._id
 				}
 			).populate('tags').populate('author').exec(function(err, posts) {
-				console.log(posts);
+				// Adds the truncate flag to all posts
+				posts.forEach(function(element, index, array) {
+					element.truncate = true;
+				});
 				res.render('tagged', {
 					title: "Tagged " + req.params.tag,
 					posts: posts
