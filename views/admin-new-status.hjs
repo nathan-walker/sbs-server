@@ -2,7 +2,7 @@
 <div class="main-container">
 		<div class="">
 			<h1>New Status</h1>
-			<form class="pure-form pure-form-stacked post-editor" action="/admin/new" method="post">
+			<form class="pure-form pure-form-stacked post-editor" action="/new" method="post">
     			<fieldset>
 					
 					<textarea class="content-box" rows="4" placeholder="Lorem ipsum..." name="content"></textarea>

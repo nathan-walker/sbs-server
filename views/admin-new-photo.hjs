@@ -5,7 +5,7 @@
 			<form action="/admin/uploadfile"
 			      class="dropzone"
 			      id="photo"></form>
-			<form class="pure-form pure-form-stacked post-editor" action="/admin/new" method="post">
+			<form class="pure-form pure-form-stacked post-editor" action="/new" method="post">
     			<fieldset>
 					<input id="title" type="text" placeholder="Title" name="title">
 					<input id="link" type="text" placeholder="Original Source" name="sourceLink">

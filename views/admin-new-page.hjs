@@ -4,7 +4,7 @@
 	<h1>
 		New Page
 	</h1>
-	<form class="pure-form pure-form-stacked post-editor" action="/admin/new" method="post">
+	<form class="pure-form pure-form-stacked post-editor" action="/new" method="post">
 		<fieldset>
 			<input id="title" name="title" type="text" placeholder="Title"> 
 			<textarea class="content-box" name="content" rows="15" placeholder="Lorem ipsum...">

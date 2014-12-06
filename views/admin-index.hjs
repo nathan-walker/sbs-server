@@ -4,12 +4,12 @@
 			<h1>Hi, {{ user.firstName }}!</h1>
 			<h2>New Posts:</h2>
 			<ul>
-				<li><a href="admin/new/post">New Post</a></li>
-				<li><a href="admin/new/status">New Status</a></li>
-				<li><a href="admin/new/link">New Link</a></li>
-				<li><a href="admin/new/page">New Page</a></li>
-				<li><a href="admin/new/note">New Note</a></li>
-				<li><a href="admin/new/photo">New Photo</a></li>
+				<li><a href="new/post">New Post</a></li>
+				<li><a href="new/status">New Status</a></li>
+				<li><a href="new/link">New Link</a></li>
+				<li><a href="new/page">New Page</a></li>
+				<li><a href="new/note">New Note</a></li>
+				<li><a href="new/photo">New Photo</a></li>
 			</ul>
 		</div>
 	</div>
