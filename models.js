@@ -74,6 +74,7 @@ postSchema.methods.addTag = function(name, callback) {
 
 postSchema.methods.addTags = function(tagString, callback) {
 	var post = this;
+	console.log(tagString);
 	if (tagString) {
 		var tags = tagString.split(' ');
 		async.map(tags, function(item, cb) {
