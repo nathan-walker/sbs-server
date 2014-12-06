@@ -76,7 +76,7 @@ router.get('/tagged/:tag', function(req, res) {
 			console.log(tags[0]);
 			mongoose.model('Post').find(
 				{ 
-					tags: { $elemMatch: { _id: tags[0]._id } }
+					tags: { $elemMatch: tags[0]._id  }
 				}
 			).populate('tags').populate('author').exec(function(err, posts) {
 				console.log(posts);
