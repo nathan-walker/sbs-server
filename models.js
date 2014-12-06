@@ -81,12 +81,13 @@ postSchema.methods.addTags = function(tagString, callback) {
 		async.map(tags, function(item, cb) {
 			item = item.toLowerCase();
 			Tag.findOne({ name: item }, function(err, tag) {
+				console.log(tag);
 				if (tag !== undefined) {
 					cb(err, tag);
 				} else {
 					tag = new Tag({ name: item });
 					tag.save(function(err, tag) {
-						console.log(err, tag);
+						console.log('error:' + err);
 						cb(err, tag);
 					});
 				}
