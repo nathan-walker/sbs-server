@@ -28,3 +28,9 @@ node_modules
 
 # Config file
 config.json
+
+# Certs
+*.key
+*.csr
+*.crt
+*.srl

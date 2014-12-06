@@ -55,7 +55,7 @@ router.use(passport.session());
 router.use(function(req, res, next) {
 	if (req.url !== '/login') {
 		if (!req.user) {
-			res.redirect('/admin/login');
+			res.redirect('/login');
 		} else {
 			next();
 		}
@@ -65,14 +65,13 @@ router.use(function(req, res, next) {
 })
 
 router.post('/login', passport.authenticate('local', {
-	successRedirect: '/admin',
-	failureRedirect: '/admin/login'
+	successRedirect: '/',
+	failureRedirect: '/login'
 }));
 
 router.get('/login', function(req, res) {
 	if (req.user) {
-		console.log("hello");
-		res.redirect('/admin');
+		res.redirect('/');
 	} else {
 		res.render('login');
 	}
@@ -134,7 +133,7 @@ router.post('/new', function(req, res){
 				console.log(err);
 				res.status(500).end();
 			} else {
-				res.redirect('/admin');
+				res.redirect('/');
 			}
 		});
 	});
