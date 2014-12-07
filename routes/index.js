@@ -35,6 +35,7 @@ router.get('/rss', function(req, res) {
 					element.isLink = true;
 				}
 			});
+			res.header("Content-Type", "application/rss+xml");
 			res.render('feed', {
 				posts: posts,
 				publishedDate: moment(posts[0].published).format('ddd, DD MMM YYYY HH:mm:ss ZZ')
