@@ -74,29 +74,21 @@ postSchema.methods.addTag = function(name, callback) {
 
 postSchema.methods.addTags = function(tagString, callback) {
 	var post = this;
-	console.log(tagString);
 	if (tagString) {
 		var tags = tagString.split(' ');
-		console.log(tags);
 		async.map(tags, function(item, cb) {
 			item = item.toLowerCase();
 			Tag.findOne({ name: item }, function(err, tag) {
-				console.log(tag);
 				if (tag) {
-					console.log("up here, tag:" + tag);
 					cb(err, tag);
 				} else {
-					console.log("here");
 					tag = new Tag({ name: item });
 					tag.save(function(err, tag) {
-						console.log('error:' + err);
-						console.log('tag:' + tag);
 						cb(err, tag);
 					});
 				}
 			});
 		}, function(err, results) {
-			console.log(results);
 			results.forEach(function(element, index, array) {
 				post.tags.push(element._id);
 			});

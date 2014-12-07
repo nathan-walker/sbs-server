@@ -29,6 +29,12 @@ router.get('/rss', function(req, res) {
 			type: { $ne: 'Page' },
 			published: { $lt: Date.now() }
 		}).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
+			// Adds the link flag to all links
+			posts.forEach(function(element, index, array) {
+				if (element.type === 'Link') {
+					element.isLink = true;
+				}
+			});
 			res.render('feed', {
 				posts: posts,
 				publishedDate: moment(posts[0].published).format('ddd, DD MMM YYYY HH:mm:ss ZZ')
