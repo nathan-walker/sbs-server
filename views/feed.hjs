@@ -15,7 +15,7 @@
 		{{#posts}}
 		{{#if isLink}}
 		<item>
-			<title>&rarr; {{ title }}</title>
+			<title>&#x2192; {{ title }}</title>
 			<link>{{ linksTo }}</link>
 			<description><![CDATA[{{ feedInterior }}<p><a href="{{ pageURL }}">Permalink</a></p>]]></description>
 			<pubDate>{{ published-rfc822 }}</pubDate>
