@@ -9,7 +9,10 @@ router.get('/', function(req, res) {
 	// Get all posts that are not pages and are published
 	mongoose.model('Post').find({ 
 			type: { $ne: 'Page' },
-			published: { $lt: Date.now() }
+			published: { 
+				$lt: Date.now(),
+				$gt: moment().subtract(30, 'days').toDate()
+			}
 		}).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
 			// Adds the truncate flag to all posts
 			posts.forEach(function(element, index, array) {
@@ -27,7 +30,10 @@ router.get('/rss', function(req, res) {
 	// Get all posts that are not pages and are published
 	mongoose.model('Post').find({
 			type: { $ne: 'Page' },
-			published: { $lt: Date.now() }
+			published: { 
+				$lt: Date.now(),
+				$gt: moment().subtract(30, 'days').toDate()
+			}
 		}).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
 			// Adds the link flag to all links
 			posts.forEach(function(element, index, array) {
@@ -97,6 +103,27 @@ router.get('/tagged/:tag', function(req, res) {
 		} else {
 			res.status(404);
 		}
+	});
+});
+
+// GET archive months
+router.get('/archive/:year/:month', function(req, res) {
+	var date = moment(req.params.year+"-"+req.params.month+"-1");
+	mongoose.model('Post').find({
+		type: { $ne: 'Page' },
+		published: { 
+			$gt: date.toDate(),
+			$lt: date.endOf('month').toDate()
+		}
+	}).populate('tags').populate('author').exec(function(err, posts) {
+		// Adds the truncate flag to all posts
+		posts.forEach(function(element, index, array) {
+			element.truncate = true;
+		});
+		res.render('tagged', {
+			title: "Archive: " + date.format(MMMM YYYY),
+			posts: posts
+		});
 	});
 });
 
