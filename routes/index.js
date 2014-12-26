@@ -49,6 +49,27 @@ router.get('/rss', function(req, res) {
 	});
 });
 
+// GET archive months
+router.get('/archive/:year/:month', function(req, res) {
+	var date = moment(req.params.year+"-"+req.params.month+"-1");
+	mongoose.model('Post').find({
+		type: { $ne: 'Page' },
+		published: { 
+			$gt: date.toDate(),
+			$lt: date.endOf('month').toDate()
+		}
+	}).populate('tags').populate('author').exec(function(err, posts) {
+		// Adds the truncate flag to all posts
+		posts.forEach(function(element, index, array) {
+			element.truncate = true;
+		});
+		res.render('tagged', {
+			title: "Archive: " + date.format('MMMM YYYY'),
+			posts: posts
+		});
+	});
+});
+
 // GET post page
 router.get('/:year/:month/:slug', function(req, res) {
 	// find post by slug that is published
@@ -103,27 +124,6 @@ router.get('/tagged/:tag', function(req, res) {
 		} else {
 			res.status(404);
 		}
-	});
-});
-
-// GET archive months
-router.get('/archive/:year/:month', function(req, res) {
-	var date = moment(req.params.year+"-"+req.params.month+"-1");
-	mongoose.model('Post').find({
-		type: { $ne: 'Page' },
-		published: { 
-			$gt: date.toDate(),
-			$lt: date.endOf('month').toDate()
-		}
-	}).populate('tags').populate('author').exec(function(err, posts) {
-		// Adds the truncate flag to all posts
-		posts.forEach(function(element, index, array) {
-			element.truncate = true;
-		});
-		res.render('tagged', {
-			title: "Archive: " + date.format('MMMM YYYY'),
-			posts: posts
-		});
 	});
 });
 
