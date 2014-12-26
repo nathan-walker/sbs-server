@@ -95,6 +95,15 @@ router.get('/', function(req, res) {
 	res.render('admin-index', { user: req.user });
 });
 
+// Lists all posts 
+router.get('/all-posts', function(req, res) {
+	Post.find().sort({ published: -1 }).exec(function(err, posts) {
+		res.render('admin-all-posts', { 
+			posts: posts
+		});
+	});
+});
+
 // Form action for new posts
 router.post('/new', function(req, res){
 	var info = req.body;
@@ -182,6 +191,15 @@ router.get('/nearby/:lat/:lng', function(req, res) {
 	foursquare.Venues.search(req.params.lat, req.params.lng, null, { limit: 5 }, null, function(err, results) {
 		res.send(results);
 	});
+});
+
+// Delete a post
+router.post('/delete', function(req, res) {
+	if (req.body.id) {
+		Post.find({ _id: req.body.id }).remove().exec(function() {
+			res.status(204).end();
+		});
+	}
 });
 
 /** Create forms **/

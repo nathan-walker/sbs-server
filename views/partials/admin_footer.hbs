@@ -8,7 +8,7 @@ var fillCurrentLocation = function() {
 			$('#longitude').val(position.coords.longitude);
 			$('#addLocationButton').prop('disabled', true);
 			$('#addLocationButton').text('Added');
-			$.get("{{ settings.baseURL }}/admin/nearby/" + position.coords.latitude + '/' + position.coords.longitude,
+			$.get("{{ settings.baseURL }}/nearby/" + position.coords.latitude + '/' + position.coords.longitude,
 				function(data) {
 					$('#possibleLocations ol').html("");
 					$('#possibleLocations').css('display', 'initial');
@@ -41,6 +41,13 @@ $('#addLocationButton').click(function() {
 		fillCurrentLocation();
 	}
 });
+
+$('.deleteButton').click(function() {
+	var id = $(this).data('delete-id');
+	$.post('/delete', { id: id }, function() {
+		location.reload();
+	});
+})
 
 Dropzone.options.photo = {
 	maxFiles: 1,
