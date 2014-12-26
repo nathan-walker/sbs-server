@@ -51,7 +51,7 @@ router.get('/rss', function(req, res) {
 
 // GET archive months
 router.get('/archive/:year/:month', function(req, res) {
-	var date = moment(req.params.year+"-"+req.params.month+"-1");
+	var date = moment(req.params.year+"-"+req.params.month+"-01");
 	mongoose.model('Post').find({
 		type: { $ne: 'Page' },
 		published: { 
