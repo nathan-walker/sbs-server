@@ -1,0 +1,3 @@
+{{> header}}
+<h1 class="entry-title page-title">Page Not Found</h1>
+{{> footer}}

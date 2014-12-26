@@ -263,10 +263,16 @@ var createApp = function(routes) {
 	// no stacktraces leaked to user
 	app.use(function(err, req, res, next) {
 		res.status(err.status || 500);
-		res.render('error', {
-			message: err.message,
-			error: {}
-		});
+		if (err.status === 404) {
+			res.render('404', {
+				title: "404 Page Not Found"
+			});
+		} else {
+			res.render('error', {
+				message: err.message,
+				error: {}
+			});
+		}
 	});
 	
 	return app;
