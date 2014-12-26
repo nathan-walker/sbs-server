@@ -18,18 +18,6 @@
 						<td><button class="pure-button button-error deleteButton" type="button" data-delete-id="{{ _id }}">Delete</button></td>
 					</tr>
 					{{/posts}}
-					<tr>
-						<td>2</td>
-						<td>Toyota</td>
-						<td>Camry</td>
-						<td>2012</td>
-					</tr>
-					<tr>
-						<td>3</td>
-						<td>Hyundai</td>
-						<td>Elantra</td>
-						<td>2010</td>
-					</tr>
 				</tbody>
 			</table>
 		</div>
