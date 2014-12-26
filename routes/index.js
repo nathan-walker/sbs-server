@@ -61,7 +61,6 @@ router.get('/archive/:year/:month', function(req, res) {
 		}
 	}).populate('tags').populate('author').sort({ published: 1 }).exec(function(err, posts) {
 		// Adds the truncate flag to all posts
-		console.log(posts);
 		posts.forEach(function(element, index, array) {
 			element.truncate = true;
 		});
