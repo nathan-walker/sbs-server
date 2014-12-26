@@ -51,20 +51,22 @@ router.get('/rss', function(req, res) {
 
 // GET archive months
 router.get('/archive/:year/:month', function(req, res) {
-	var date = moment(req.params.year+"-"+req.params.month+"-01");
+	var startDate = moment(req.params.year+"-"+req.params.month+"-01");
+	var endDate = moment(startDate).endOf('month');
 	mongoose.model('Post').find({
 		type: { $ne: 'Page' },
 		published: { 
-			$gt: date.toDate(),
-			$lt: date.endOf('month').toDate()
+			$gte: startDate.toDate(),
+			$lte: endDate.toDate()
 		}
-	}).populate('tags').populate('author').exec(function(err, posts) {
+	}).populate('tags').populate('author').sort({ published: 1 }).exec(function(err, posts) {
 		// Adds the truncate flag to all posts
+		console.log(posts);
 		posts.forEach(function(element, index, array) {
 			element.truncate = true;
 		});
 		res.render('tagged', {
-			title: "Archive: " + date.format('MMMM YYYY'),
+			title: "Archive: " + startDate.format('MMMM YYYY'),
 			posts: posts
 		});
 	});
