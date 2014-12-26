@@ -121,7 +121,7 @@ router.get('/archive/:year/:month', function(req, res) {
 			element.truncate = true;
 		});
 		res.render('tagged', {
-			title: "Archive: " + date.format(MMMM YYYY),
+			title: "Archive: " + date.format('MMMM YYYY'),
 			posts: posts
 		});
 	});
