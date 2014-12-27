@@ -61,6 +61,21 @@ archiveOptions.reduce = function(keyMonth, values) {
 
 router.get('/archive', function(req, res) {
 	mongoose.model('Post').mapReduce(archiveOptions, function(err, results) {
+		results.sort(function(a, b) {
+			if (a._id.year > b._id.year) {
+				return 1;
+			}
+			if (a._id.year < b._id.year) {
+				return -1;
+			}
+			if (a._id.month > b._id.month) {
+				return 1;
+			}
+			if (a._id.month < b._id.month) {
+				return -1;
+			}
+			return 0;
+		});
 		results.forEach(function(element, index, array) {
 			element.string = moment(element._id.year + " " + element._id.month, "YYYY M").format("MMMM YYYY");
 			if (element._id.month < 10) {
