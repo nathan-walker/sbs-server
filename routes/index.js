@@ -49,6 +49,33 @@ router.get('/rss', function(req, res) {
 	});
 });
 
+// GET Archive List
+var archiveOptions = {};
+archiveOptions.map = function() {
+	emit({ month: this.published.getMonth() + 1, year: this.published.getFullYear()}, 1);
+};
+
+archiveOptions.reduce = function(keyMonth, values) {
+	return values.length;
+};
+
+router.get('/archive', function(req, res) {
+	mongoose.model('Post').mapReduce(archiveOptions, function(err, results) {
+		results.forEach(function(element, index, array) {
+			element.string = moment(element._id.year + " " + element._id.month, "YYYY M").format("MMMM YYYY");
+			if (element._id.month < 10) {
+				element._id.month = "0" + element._id.month;
+			} else {
+				element._id.month = String(element._id.month);
+			}
+		});
+		res.render('archive', {
+			title: "Archive",
+			months: results
+		});
+	});
+});
+
 // GET archive months
 router.get('/archive/:year/:month', function(req, res) {
 	var startDate = moment(req.params.year+"-"+req.params.month+"-01");
