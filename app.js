@@ -234,7 +234,9 @@ var createApp = function(routes) {
 	app.use(bodyParser.urlencoded());
 	app.use(busboy());
 	app.use(cookieParser());
-	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(express.static(path.join(__dirname, 'public')), {
+		maxAge: 3600000
+	});
 	
 	app.use('/', routes);
 	
