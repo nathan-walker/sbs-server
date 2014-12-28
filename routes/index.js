@@ -114,7 +114,7 @@ router.get('/archive/:year/:month', function(req, res) {
 });
 
 // GET post page
-router.get('/:year/:month/:slug', function(req, res) {
+router.get('/:year/:month/:slug', function(req, res, next) {
 	// find post by slug that is published
 	mongoose.model('Post').find(
 		{ 
@@ -122,10 +122,15 @@ router.get('/:year/:month/:slug', function(req, res) {
 			published: { $lt: Date.now() }
 		}
 	).populate('tags').populate('author').limit(1).exec(function(err, posts) {
-		if (posts[0].type == 'Page') {
-			res.redirect(301, '/'+req.params.slug);
+		if (posts[0]) {
+			if (posts[0].type == 'Page') {
+				res.redirect(301, '/'+req.params.slug);
+			} else {
+				res.render('post', posts[0]);
+			}
 		} else {
-			res.render('post', posts[0]);
+			res.status(404);	
+			next();
 		}
 	});
 });
