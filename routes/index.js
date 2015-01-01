@@ -159,7 +159,7 @@ router.get('/tagged/:tag', function(req, res) {
 				{ 
 					tags: tags[0]._id
 				}
-			).populate('tags').populate('author').exec(function(err, posts) {
+			).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
 				// Adds the truncate flag to all posts
 				posts.forEach(function(element, index, array) {
 					element.truncate = true;
