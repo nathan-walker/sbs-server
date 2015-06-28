@@ -226,6 +226,8 @@ var createApp = function(routes) {
 	app.set('editorName', nconf.get('editorName'));
 	app.set('webmasterEmail', nconf.get('webmasterEmail'));
 	app.set('webmasterName', nconf.get('webmasterName'));
+	app.set('location', nconf.get('location'));
+	app.set('currentYear', new Date().getFullYear())
 
 	// Common middleware
 	app.use(favicon());
