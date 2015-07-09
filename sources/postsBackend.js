@@ -181,6 +181,41 @@ var sortMonths = function() {
 	});
 };
 
+var listMonths = function() {
+	var months = [];
+	forEachMonth(function(year, month) {
+		var monthObject = {
+			year: year,
+			month: month
+		};
+		months.push(monthObject);
+	});
+	months.sort(function(a, b) {
+		if (a._id.year > b._id.year) {
+			return 1;
+		}
+		if (a._id.year < b._id.year) {
+			return -1;
+		}
+		if (a._id.month > b._id.month) {
+			return 1;
+		}
+		if (a._id.month < b._id.month) {
+			return -1;
+		}
+		return 0;
+	});
+	months.forEach(function(element) {
+		element.string = moment(element._id.year + " " + element._id.month, "YYYY M").format("MMMM YYYY");
+		if (element._id.month < 10) {
+			element._id.month = "0" + element._id.month;
+		} else {
+			element._id.month = String(element._id.month);
+		}
+	});
+	return months;
+}
+
 // periodically clean the recents list
 
 var cleanRecentEntries = function() {
@@ -226,5 +261,6 @@ module.exports = {
 	entries: entries,
 	recentEntries: last30Days,
 	archives: years,
-	tags: tags
+	tags: tags,
+	listMonths: listMonths
 };

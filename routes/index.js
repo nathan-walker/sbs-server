@@ -4,6 +4,8 @@ var nconf = require('nconf');
 var mongoose = require('mongoose');
 var moment = require('moment');
 
+var db = require('../sources/posts');
+
 // GET home page
 router.get('/', function(req, res) {
 	// Get all posts that are not pages and are published
