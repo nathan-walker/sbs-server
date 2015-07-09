@@ -12,7 +12,7 @@ nconf.file({ file: 'config.json' });
 
 var db = require('./sources/db.js');
 require('./models.js');
-require('./sources/posts');
+require('./sources/postsBackend');
 
 /** view engine setup **/
 

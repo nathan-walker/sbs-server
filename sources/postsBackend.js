@@ -122,7 +122,15 @@ var fileHandler = function(root, fileStat, next) {
 	);
 };
 
-var updateFiles = function() {
+var updateFiles = function(complete) {
+	
+	// Clear everything first
+	entries = {};
+	last30Days = [];
+	tags = {};
+	years = {};
+	unpublished = [];
+	
 	var walker = walk.walk(path.resolve('./posts'), {
 		followLinks: false
 	});
@@ -139,6 +147,7 @@ var updateFiles = function() {
 		sortLast30Days();
 		sortMonths();
 		console.log("files loaded");
+		complete();
 	});
 };
 
@@ -211,3 +220,11 @@ var promoteUnpublished = function() {
 };
 
 setInterval(promoteUnpublished, 60000);
+
+module.exports = {
+	update: updateFiles,
+	entries: entries,
+	recentEntries: last30Days,
+	archives: years,
+	tags: tags
+};
