@@ -4,7 +4,7 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var moment = require('moment');
 var hbs = require('hbs');
-var multimarkdown = require('multimarkdown');
+var multimarkdown = require('mmd');
 var handlebars = hbs.handlebars;
 
 var nconf = require('nconf');
