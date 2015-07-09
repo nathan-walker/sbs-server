@@ -114,6 +114,7 @@ router.get('/archive/:year/:month', function(req, res) {
 });
 
 // GET post page
+// TODO: check if post is published
 router.get('/:year/:month/:slug', function(req, res, next) {
 	// find post by slug that is published
 	mongoose.model('Post').find(
