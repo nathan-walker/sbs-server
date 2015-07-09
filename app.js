@@ -10,8 +10,6 @@ var handlebars = hbs.handlebars;
 var nconf = require('nconf');
 nconf.file({ file: 'config.json' });
 
-var db = require('./sources/db.js');
-require('./models.js');
 require('./sources/postsBackend');
 
 /** view engine setup **/
@@ -32,10 +30,8 @@ hbs.registerHelper('makeTimeTag', function(location, options) {
 hbs.registerHelper('tagList', function(options) {
 	var listArray = [];
 	this.tags.forEach(function(tag, index, array) {
-		if (!tag.shadow) {
-			var string = '<a href="' + nconf.get('base-url') + '/tagged/' + escapeString(tag.name) + '">' + escapeString(tag.name) + '</a>';
-			listArray.push(string);
-		}
+		var string = '<a href="' + nconf.get('base-url') + '/tagged/' + escapeString(tag) + '">' + escapeString(tag) + '</a>';
+		listArray.push(string);
 	});
 	return new hbs.handlebars.SafeString(listArray.join(', '));
 });
@@ -48,8 +44,8 @@ hbs.registerHelper('pageURL', function() {
 
 // A link to an author's page
 hbs.registerHelper('authorLink', function() {
-	var author = this.author;
-	var string = '<a href="' + nconf.get('base-url') + '/author/' + escapeString(author._id) + '">by ' + escapeString(author.displayName) + '</a>';
+	var author = nconf.get('authors')[this.author];
+	var string = '<a href="' + escapeString(author.url) + '">by ' + escapeString(author.displayName) + '</a>';
 	return new hbs.handlebars.SafeString(string);
 });
 
@@ -76,49 +72,6 @@ hbs.registerHelper('markedTruncated', function(options) {
 	var text = multimarkdown.convert(options.fn(this));
 	var truncated = text.substr(0, text.indexOf('</p>', text.indexOf('</p>')+4)+4);
 	return new hbs.handlebars.SafeString(truncated);
-});
-
-// Creates a link for a location
-hbs.registerHelper('locationLink', function() {
-	if (this.location.name) {
-		var innerString;
-		
-		// Uses 'at' for specific locations and 'near' for non-specific locations
-		if (this.location.specific) {
-			innerString = 'at ' + this.location.name;
-		} else {
-			innerString = 'near ' + this.location.name;
-		}
-		
-		var link;
-		// Generates a link if coordinates are available
-		if (this.location.latitude && this.location.longitude) {
-			// Default level is 17
-			var level = 17;
-			if (!this.location.specific) {
-				// Makes coordinates only to 2 decimals if non-specific
-				this.location.latitude = this.location.latitude.toFixed(2);
-				this.location.longitude = this.location.longitude.toFixed(2);
-				// Moves level out if non-specific location
-				level = 15;
-			}
-			link = 'http://bing.com/maps/default.aspx?cp=' + this.location.latitude + '~' + this.location.longitude + '&lvl=' + level;
-		}
-		var stringBeginning = '<span class="locationlink">';
-		var finalString;
-		
-		// adds a link tag if link is available
-		if (link) {
-			finalString = stringBeginning + '<a href="' + link + '" target="_blank">' + innerString + '</a></span>';
-		} else {
-			finalString = stringBeginning + innerString + '</span>';
-		}
-		
-		return new hbs.handlebars.SafeString(finalString);
-	} else {
-		// Returns a blank string if name is empty
-		return '';
-	}
 });
 
 // Checks if a post is a link, used with Handlebars {{#if}} tag

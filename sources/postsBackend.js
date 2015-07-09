@@ -259,9 +259,9 @@ setInterval(promoteUnpublished, 60000);
 
 module.exports = {
 	update: updateFiles,
-	entries: entries,
-	recentEntries: last30Days,
-	archives: years,
-	tags: tags,
+	entries: function() { return entries; },
+	recentEntries: function() { return last30Days; },
+	archives: function() { return years; },
+	tags: function() { return tags; },
 	listMonths: listMonths
 };

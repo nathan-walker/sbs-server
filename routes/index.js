@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var nconf = require('nconf');
-var mongoose = require('mongoose');
 var moment = require('moment');
 
 var db = require('../sources/posts');
@@ -11,7 +10,7 @@ router.get('/', function(req, res) {
 	db.findRecent(function(posts) {
 		// Adds the truncate flag to all posts
 		posts.forEach(function(post) {
-			element.truncate = true;
+			post.truncate = true;
 		});
 		res.render('index', {
 			title: "Home",
@@ -25,8 +24,8 @@ router.get('/rss', function(req, res) {
 	db.findRecent(function(posts) {
 		// Adds the link flag to all links
 		posts.forEach(function(post) {
-			if (element.type === 'Link') {
-				element.isLink = true;
+			if (post.type === 'Link') {
+				post.isLink = true;
 			}
 		});
 		res.render('feed', {
@@ -77,18 +76,6 @@ router.get('/:year/:month/:slug', function(req, res, next) {
 	});
 });
 
-// GET author page
-router.get('/author/:id', function(req, res) {
-	mongoose.model('User').find({
-		_id: req.params.id
-	}).limit(1).exec(function(err, authors) {
-		if (authors[0]) {
-			authors[0].title = authors[0].displayName;
-		}
-		res.render('author', authors[0]);
-	});
-});
-
 // GET tag list page
 router.get('/tagged/:tag', function(req, res, next) {
 	db.findTagged(req.params.tag, function(posts) {
@@ -113,8 +100,8 @@ router.get('/:slug', function(req, res, next) {
 	db.findOne(req.params.slug, function(post) {
 		if (post && post.type === 'Page') {
 			// See if a page is designed as a redirect
-			if (post.linksTo) {
-				res.redirect(301, post.linksTo)
+			if (post.linksto) {
+				res.redirect(301, post.linksto)
 			} else {
 				res.render('post', post);
 			}

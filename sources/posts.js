@@ -12,20 +12,20 @@ var query = function(callback) {
 };
 
 var findOne = function(slug, callback) {
-	query(function() { callback(db.entries[slug])} );
+	query(function() { callback(db.entries()[slug])} );
 };
 
 var findRecent = function(callback) {
-	query(function() { callback(db.recentEntries)} );
+	query(function() { callback(db.recentEntries())} );
 };
 
 var findTagged = function(tag, callback) {
-	query(function() { callback(db.tags[tag])} );
+	query(function() { callback(db.tags()[tag])} );
 };
 
 var findMonth = function(year, month, callback) {
 	month = month - 1;
-	query(function() { callback(db.archives[year][month]) });
+	query(function() { callback(db.archives()[year][month]) });
 };
 
 var listMonths = function(callback) {

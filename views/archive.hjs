@@ -1,6 +1,6 @@
 {{> header}}
 <h1 class="entry-title page-title">{{ title }}</h1>
 <ul>
-{{#months}}<li><a href="{{ settings.base-url }}/archive/{{ _id.year }}/{{ _id.month }}">{{ string }}</a></li>{{/months}}
+{{#months}}<li><a href="{{ settings.base-url }}/archive/{{ year }}/{{ month }}">{{ string }}</a></li>{{/months}}
 </ul>
 {{> footer}}
