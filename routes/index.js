@@ -8,108 +8,53 @@ var db = require('../sources/posts');
 
 // GET home page
 router.get('/', function(req, res) {
-	// Get all posts that are not pages and are published
-	mongoose.model('Post').find({ 
-			type: { $ne: 'Page' },
-			published: { 
-				$lt: Date.now(),
-				$gt: moment().subtract(30, 'days').toDate()
-			}
-		}).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
-			// Adds the truncate flag to all posts
-			posts.forEach(function(element, index, array) {
-				element.truncate = true;
-			});
-			res.render('index', { 
-				title: "Home", 
-				posts: posts
-			});
+	db.findRecent(function(posts) {
+		// Adds the truncate flag to all posts
+		posts.forEach(function(post) {
+			element.truncate = true;
+		});
+		res.render('index', {
+			title: "Home",
+			posts: posts
+		});
 	});
 });
 
 // GET rss feed
 router.get('/rss', function(req, res) {
-	// Get all posts that are not pages and are published
-	mongoose.model('Post').find({
-			type: { $ne: 'Page' },
-			published: { 
-				$lt: Date.now(),
-				$gt: moment().subtract(30, 'days').toDate()
+	db.findRecent(function(posts) {
+		// Adds the link flag to all links
+		posts.forEach(function(post) {
+			if (element.type === 'Link') {
+				element.isLink = true;
 			}
-		}).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
-			// Adds the link flag to all links
-			posts.forEach(function(element, index, array) {
-				if (element.type === 'Link') {
-					element.isLink = true;
-				}
-			});
-			res.header("Content-Type", "application/rss+xml");
-			res.render('feed', {
-				posts: posts,
-				publishedDate: moment(posts[0].published).format('ddd, DD MMM YYYY HH:mm:ss ZZ')
-			});
+		});
+		res.render('feed', {
+			posts: posts,
+			publishedDate: moment(posts[0].published).format('ddd, DD MMM YYYY HH:mm:ss ZZ')
+		});
 	});
 });
 
 // GET Archive List
-var archiveOptions = {};
-archiveOptions.map = function() {
-	emit({ month: this.published.getMonth() + 1, year: this.published.getFullYear()}, 1);
-};
-
-archiveOptions.reduce = function(keyMonth, values) {
-	return values.length;
-};
-
 router.get('/archive', function(req, res) {
-	mongoose.model('Post').mapReduce(archiveOptions, function(err, results) {
-		results.sort(function(a, b) {
-			if (a._id.year > b._id.year) {
-				return 1;
-			}
-			if (a._id.year < b._id.year) {
-				return -1;
-			}
-			if (a._id.month > b._id.month) {
-				return 1;
-			}
-			if (a._id.month < b._id.month) {
-				return -1;
-			}
-			return 0;
-		});
-		results.forEach(function(element, index, array) {
-			element.string = moment(element._id.year + " " + element._id.month, "YYYY M").format("MMMM YYYY");
-			if (element._id.month < 10) {
-				element._id.month = "0" + element._id.month;
-			} else {
-				element._id.month = String(element._id.month);
-			}
-		});
+	db.listMonths(function(months) {
 		res.render('archive', {
 			title: "Archive",
-			months: results
+			months: months
 		});
 	});
 });
 
 // GET archive months
 router.get('/archive/:year/:month', function(req, res) {
-	var startDate = moment(req.params.year+"-"+req.params.month+"-01");
-	var endDate = moment(startDate).endOf('month');
-	mongoose.model('Post').find({
-		type: { $ne: 'Page' },
-		published: { 
-			$gte: startDate.toDate(),
-			$lte: endDate.toDate()
-		}
-	}).populate('tags').populate('author').sort({ published: 1 }).exec(function(err, posts) {
+	db.findMonth(req.params.year, req.params.month, function(posts) {
 		// Adds the truncate flag to all posts
-		posts.forEach(function(element, index, array) {
+		posts.forEach(function(element) {
 			element.truncate = true;
 		});
 		res.render('tagged', {
-			title: "Archive: " + startDate.format('MMMM YYYY'),
+			title: "Archive: " + moment(req.params.year + " " + req.params.month, "YYYY M").format("MMMM YYYY"),
 			posts: posts
 		});
 	});
@@ -118,18 +63,12 @@ router.get('/archive/:year/:month', function(req, res) {
 // GET post page
 // TODO: check if post is published
 router.get('/:year/:month/:slug', function(req, res, next) {
-	// find post by slug that is published
-	mongoose.model('Post').find(
-		{ 
-			slug: req.params.slug,
-			published: { $lt: Date.now() }
-		}
-	).populate('tags').populate('author').limit(1).exec(function(err, posts) {
-		if (posts[0]) {
-			if (posts[0].type == 'Page') {
+	db.findOne(req.params.slug, function(post) {
+		if (post && post.published <= moment().valueOf()) {
+			if (post.type == 'Page') {
 				res.redirect(301, '/'+req.params.slug);
 			} else {
-				res.render('post', posts[0]);
+				res.render('post', post);
 			}
 		} else {
 			res.status(404);	
@@ -151,51 +90,37 @@ router.get('/author/:id', function(req, res) {
 });
 
 // GET tag list page
-router.get('/tagged/:tag', function(req, res) {
-	mongoose.model('Tag').find(
-		{
-			name: req.params.tag
-		}
-	).exec(function(err, tags) {
-		if (tags) {
-			mongoose.model('Post').find(
-				{ 
-					tags: tags[0]._id
-				}
-			).populate('tags').populate('author').sort({ published: -1 }).exec(function(err, posts) {
-				// Adds the truncate flag to all posts
-				posts.forEach(function(element, index, array) {
-					element.truncate = true;
-				});
-				res.render('tagged', {
-					title: "Tagged " + req.params.tag,
-					posts: posts
-				});
+router.get('/tagged/:tag', function(req, res, next) {
+	db.findTagged(req.params.tag, function(posts) {
+		if (posts) {
+			// Adds the truncate flag to all posts
+			posts.forEach(function(element, index, array) {
+				element.truncate = true;
+			});
+			res.render('tagged', {
+				title: "Tagged " + req.params.tag,
+				posts: posts
 			});
 		} else {
 			res.status(404);
+			next();
 		}
 	});
 });
 
 // Get special pages
 router.get('/:slug', function(req, res, next) {
-	mongoose.model('Post').find(
-		{
-		type: { $in: ['Page'] },
-		slug: req.params.slug
-		}
-	).limit(1).exec(function(err, posts) {
-		if (!posts[0]) {
+	db.findOne(req.params.slug, function(post) {
+		if (post && post.type === 'Page') {
+			// See if a page is designed as a redirect
+			if (post.linksTo) {
+				res.redirect(301, post.linksTo)
+			} else {
+				res.render('post', post);
+			}
+		} else {
 			res.status(404);
 			next();
-		} else {
-			// See if a page is designed as a redirect
-			if (posts[0].linksTo) {
-				res.redirect(301, posts[0].linksTo)
-			} else {
-				res.render('post', posts[0]);
-			}	
 		}
 	});
 });
