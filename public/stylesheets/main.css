@@ -114,6 +114,11 @@ article {
 	height: auto;
 }
 
+.entry-content blockquote {
+	border-left: 2px solid grey;
+	padding-left: 8px;
+}
+
 @media(max-width:550px) {
 	.site-title {
 		font-size: 20pt;

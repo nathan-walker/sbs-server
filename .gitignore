@@ -38,3 +38,6 @@ certs
 
 # Uploads
 public/images/uploads
+
+# DS Store
+.DS_Store
