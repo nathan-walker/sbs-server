@@ -1,26 +1,12 @@
 #!/usr/bin/env node
-var https = require('https');
-var fs = require('fs');
 var nconf = require('nconf');
 nconf.file({ file: '../config.json' });
 var debug = require('debug')('sbs-server');
 var apps = require('../app');
 var app = apps.app;
-var admin = apps.admin;
 
 app.set('port', process.env.PORT || 3000);
-
-var adminServer = https.createServer({
-	key: fs.readFileSync('certs/server.key'),
-	passphrase: nconf.get('sslKey'),
-	cert: fs.readFileSync('certs/server.crt'),
-	ca: fs.readFileSync('certs/ca.crt'),
-	requestCert: true,
-	rejectUnauthorized: true
-}, admin);
 
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
 });
-
-adminServer.listen(3001);

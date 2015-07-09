@@ -2,10 +2,7 @@ var express = require('express');
 var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
 var moment = require('moment');
-var busboy = require('connect-busboy');
 var hbs = require('hbs');
 var multimarkdown = require('multimarkdown');
 var handlebars = hbs.handlebars;
@@ -206,7 +203,6 @@ hbs.registerHelper('feedContent', function() {
 });
 
 // References the route files
-var adminRoutes = require('./routes/admin');
 var routes = require('./routes/index');
 
 // Function to create an app object
@@ -232,10 +228,6 @@ var createApp = function(routes) {
 	// Common middleware
 	app.use(favicon());
 	app.use(logger('dev'));
-	app.use(bodyParser.json());
-	app.use(bodyParser.urlencoded());
-	app.use(busboy());
-	app.use(cookieParser());
 	app.use(express.static(path.join(__dirname, 'public')), {
 		maxAge: 3600000
 	});
@@ -284,9 +276,7 @@ var createApp = function(routes) {
 
 // Creates objects for main app and admin interface
 var app = createApp(routes);
-var admin = createApp(adminRoutes);
 
 module.exports = {
-	app: app,
-	admin: admin
+	app: app
 };
