@@ -15,7 +15,6 @@
     "morgan": "~1.0.0",
     "nconf": "~0.6.9",
     "speakeasy": "^1.0.3",
-    "static-favicon": "~1.0.0",
     "walk": "^2.3.9"
   }
 }

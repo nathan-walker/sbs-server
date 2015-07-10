@@ -1,6 +1,5 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('static-favicon');
 var logger = require('morgan');
 var moment = require('moment');
 var hbs = require('hbs');
@@ -180,7 +179,6 @@ var createApp = function(routes) {
 	app.set('currentYear', new Date().getFullYear())
 
 	// Common middleware
-	app.use(favicon());
 	app.use(logger('dev'));
 	app.use(express.static(path.join(__dirname, 'public')), {
 		maxAge: 3600000
