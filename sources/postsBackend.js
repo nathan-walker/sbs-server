@@ -213,7 +213,7 @@ var listMonths = function() {
 			element.month = String(element.month);
 		}
 	});
-	console.log(months);
+
 	return months;
 }
 

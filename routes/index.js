@@ -95,6 +95,20 @@ router.get('/tagged/:tag', function(req, res, next) {
 	});
 });
 
+// Secret page to force updates
+var verifyUpdatePermissions = require('../sources/security');
+
+router.get('/update/:key/:code', function(req, res) {
+	if (verifyUpdatePermissions(req.params.key, req.params.code) === true) {
+		db.update(function() {
+			res.status(202);
+			res.send("OK");
+		});
+	} else {
+		res.redirect('/');
+	}
+});
+
 // Get special pages
 router.get('/:slug', function(req, res, next) {
 	db.findOne(req.params.slug, function(post) {

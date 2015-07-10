@@ -32,7 +32,7 @@ var listMonths = function(callback) {
 	query(function() { callback(db.listMonths()) });
 };
 
-var update = function() {
+var update = function(callback) {
 	if (locked) {
 		return;
 	}
@@ -43,6 +43,9 @@ var update = function() {
 			element();
 		});
 		queue = [];
+		if (callback) {
+			callback();
+		}
 	});
 };
 
