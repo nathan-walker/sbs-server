@@ -32,6 +32,9 @@ config.json
 # Posts
 posts
 
+# VS Code settings directory
+.settings
+
 # Uploads
 public/images/uploads
 
