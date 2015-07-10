@@ -29,12 +29,8 @@ node_modules
 # Config file
 config.json
 
-# Certs
-*.key
-*.csr
-*.crt
-*.srl
-certs
+# Posts
+posts
 
 # Uploads
 public/images/uploads
