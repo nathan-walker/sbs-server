@@ -67,6 +67,8 @@ router.get('/:year/:month/:slug', function(req, res, next) {
 			if (post.type == 'Page') {
 				res.redirect(301, '/'+req.params.slug);
 			} else {
+				// Remove truncate flag
+				post.truncate = false;
 				res.render('post', post);
 			}
 		} else {
