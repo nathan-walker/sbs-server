@@ -14,7 +14,7 @@ var getMultimarkdownData = function(source) {
 			return;
 		}
 		
-		if (value.length === 1) {
+		if (value.length === 1 && key !== 'tags') {
 			data[key] = value[0];
 			return;
 		}
