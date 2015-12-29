@@ -53,6 +53,10 @@ hbs.registerHelper('published-rfc822', function() {
 	return new hbs.handlebars.SafeString(moment(this.published).format('ddd, DD MMM YYYY HH:mm:ss ZZ'));
 });
 
+hbs.registerHelper('isoDate', function() {
+	return new hbs.handlebars.SafeString(moment(this.published).toISOString());
+})
+
 // Processes text for MultiMarkdown
 // Called 'marked' because that used to be the engine
 // Now using node-multimarkdown
